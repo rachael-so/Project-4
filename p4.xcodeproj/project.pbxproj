@@ -28,6 +28,8 @@
 		CE96359E1FB63F3C00C11771 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		CE96359F1FB63F3C00C11771 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		CE9635A21FB63F6900C11771 /* sampleInput.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = sampleInput.txt; sourceTree = "<group>"; };
+		CE9635A31FB7B38C00C11771 /* Node.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Node.h; sourceTree = "<group>"; };
+		CE9635A41FB7B39B00C11771 /* BTree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BTree.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,6 +48,8 @@
 			children = (
 				CE96359E1FB63F3C00C11771 /* main.cpp */,
 				CE96359F1FB63F3C00C11771 /* README.md */,
+				CE9635A31FB7B38C00C11771 /* Node.h */,
+				CE9635A41FB7B39B00C11771 /* BTree.h */,
 				CE9635A21FB63F6900C11771 /* sampleInput.txt */,
 				CE9635921FB63E3A00C11771 /* Products */,
 			);
