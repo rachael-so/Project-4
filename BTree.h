@@ -31,6 +31,7 @@ public:
     BTree();
     ~BTree();
     void insert(int);
+    int splitChild(Node*, Node*, int);
     int remove(int);
     void print();
 };
@@ -50,6 +51,11 @@ BTree::~BTree()
 void BTree::insert(int key)
 {
     
+}
+
+int BTree::splitChild(Node *parent, Node *child, int i)
+{
+    return 0;
 }
 
 int BTree::remove(int key)

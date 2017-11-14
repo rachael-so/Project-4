@@ -23,23 +23,26 @@ using namespace std;
 
 class Node
 {
-private:
-    int size;
-    int* a;
 public:
-    Node(int,int);
+    Node(int);
     ~Node();
+    int size;
+    int *a;
+    int *children;
+    bool leaf;
 };
 
-Node::Node(int size, int degree)
+Node::Node(int size)
 {
     this->size = size;
     this->a = new int[size];
+    this->children = new int[size];
 }
 
 Node::~Node()
 {
     delete [] a;
+    delete [] children;
 }
 
 #endif /* Node_h */
