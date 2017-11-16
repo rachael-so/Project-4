@@ -27,22 +27,23 @@ public:
     Node(int);
     ~Node();
     int size;
-    int *a;
-    int *children;
-    bool leaf;
+    int numKeys;
+    int *keys;
+    Node *children;
+    bool isLeaf;
 };
 
 Node::Node(int size)
 {
     this->size = size;
-    this->a = new int[size];
-    this->children = new int[size];
+    this->keys = new int[size+1];
+    this->numKeys = 0;
+    this->isLeaf = true;
 }
 
 Node::~Node()
 {
-    delete [] a;
-    delete [] children;
+    delete [] keys;
 }
 
 #endif /* Node_h */

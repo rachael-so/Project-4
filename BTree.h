@@ -24,21 +24,21 @@ using namespace std;
 class BTree
 {
 private:
-    int size;
+    int m;
     int height;
     Node* root;
 public:
-    BTree();
+    BTree(int);
     ~BTree();
     void insert(int);
-    int splitChild(Node*, Node*, int);
+    void splitChild(Node*, Node*, int);
     int remove(int);
     void print();
 };
 
-BTree::BTree()
+BTree::BTree(int m)
 {
-    this->size = 0;
+    this->m = m;
     this->height = 0;
     this->root = NULL;
 }
@@ -50,12 +50,42 @@ BTree::~BTree()
 
 void BTree::insert(int key)
 {
-    
+    if (root == NULL) {
+        
+    }
 }
 
-int BTree::splitChild(Node *parent, Node *child, int i)
+void BTree::splitChild(Node *parent, Node *child, int i)
 {
-    return 0;
+    Node rightChild(child->size+1);
+    int mid = child->numKeys/2+1;
+    
+    for (int j = mid+1; j < child->numKeys; j++) {
+        int k = 0;
+        rightChild.keys[j] = child->keys[k];
+        k++;
+        rightChild.numKeys++;
+        child->keys[j] = NULL;
+        child->numKeys--;
+    }
+    
+    child->keys[mid] = NULL;
+    child->numKeys--;
+    
+    for (int j = i-1; j < parent->numKeys; j++) {
+        parent->keys[j+1] = parent->keys[j];
+    }
+    parent->keys[i-1] = mid;
+    parent->numKeys++;
+    
+    //add right child
+    parent->children->numKeys++;
+    parent->children->keys[i+1] = *child->keys;
+    
+    //check if parent is over and if so then call function
+    if (parent->numKeys == parent->size) {
+        //recursive call????
+    }
 }
 
 int BTree::remove(int key)
