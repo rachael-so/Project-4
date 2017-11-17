@@ -129,6 +129,7 @@ void BTree::splitChild(Node *parent, Node *child, int i)
     }
 }
 
+//NOT COMPLETE
 int BTree::remove(int key)
 {
     Node *current = root;
@@ -146,18 +147,37 @@ int BTree::remove(int key)
     if (removeMe == key){
         if (current->isLeaf == true) {
             //delete key
+            current->keys[removeMe] = NULL;
         }
         else {
-            if (current->numKeys == (m/2-1)) {
-                //at minimum number of keys
+            Node* child1 = current->children[removeMe];
+            Node* child2 = current->children[removeMe+1];
+            
+            if (child1->numKeys == (m/2) && child2->numKeys == (m/2)) {
+                //have to combine children
+                for (int i = 0, j = child1->numKeys; i < child2->numKeys; i++, j++) {
+                    child1[j] = child2[i];
+                }
+                delete [] child2;
+                child2 = NULL;
             }
             else {
-                
+                //find which child has more keys
+                if (child1->numKeys > child2->numKeys) {
+                    current->keys[removeMe] = child1->keys[child1->numKeys-1];
+                    child1->keys[child1->numKeys-1] = NULL;
+                }
+                else {
+                    current->keys[removeMe] = child2->keys[0];
+                    for (int i = child2->keys[child2->numKeys]; i > 0; i--) {
+                        child2->keys[i-1] = child2->keys[i];
+                    }
+                }
             }
         }
     }
     else {
-        //throw error: key not found
+        cout << "key not found to remove";
     }
     
     return key;
