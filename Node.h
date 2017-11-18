@@ -39,6 +39,7 @@ Node::Node(int size)
     this->keys = new int[size+1];
     this->numKeys = 0;
     this->isLeaf = false;
+    this->children = NULL;
 }
 
 Node::~Node()
