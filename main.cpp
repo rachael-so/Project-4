@@ -20,6 +20,9 @@ int main(int argc, const char * argv[]) {
     tree.insert(11);
     tree.insert(7);
     tree.insert(1);
+    tree.insert(9);
+    tree.insert(32);
+    tree.insert(20);
     
     return 0;
 }

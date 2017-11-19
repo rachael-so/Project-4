@@ -65,7 +65,7 @@ void BTree::insert(int key)
         Node* current = root;
         Node* prev;
         while (current->isLeaf == false) {
-            while (key > current->keys[i]) {
+            while (key > current->keys[i] && current->keys[i] != NULL) {
                 i++;
             }
             prev = current;
@@ -115,8 +115,9 @@ void BTree::splitChild(Node *parent, Node *child, int i)
     int mid = child->numKeys/2;
     cout << "mid: " << mid << endl;
     
-    for (int j = mid+1; j < child->numKeys; j++) {
-        int k = 0;
+    int origNumKeys = child->numKeys;
+    int k = 0;
+    for (int j = mid+1; j < origNumKeys; j++) {
         rightChild->keys[k] = child->keys[j];
         k++;
         rightChild->numKeys++;
@@ -128,7 +129,7 @@ void BTree::splitChild(Node *parent, Node *child, int i)
     child->keys[mid] = NULL;
     child->numKeys--;
     
-    for (int j = parent->numKeys-1; j > i; j--) {
+    for (int j = parent->numKeys; j > i; j--) {
         parent->keys[j] = parent->keys[j-1];
     }
     parent->keys[i] = insertMe;
@@ -221,7 +222,7 @@ void BTree::print(Node* treeRoot, int j)
 {
 //    cout << "here\n";
     int i = 0;
-    while(i <= treeRoot->numKeys && treeRoot->keys[i] != NULL) {
+    while(i < treeRoot->numKeys && treeRoot->keys[i] != NULL) {
         cout << treeRoot->keys[i] << " ";
         
         if (treeRoot->children != NULL) {
@@ -232,9 +233,11 @@ void BTree::print(Node* treeRoot, int j)
         i++;
     }
     
-//    cout << treeRoot->children[i]->keys[0] << endl;
-    
-//    i++;
+    if (treeRoot->children != NULL) {
+        cout << "[";
+        print(treeRoot->children[i], i);
+        cout << "]";
+    }
     
 }
 
