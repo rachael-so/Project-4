@@ -34,7 +34,7 @@ public:
     void splitChild(Node*, Node*, int);
     int remove(int);
     int search(Node*, int);
-    void print(Node*, int);
+    void print(Node*);
 };
 
 BTree::BTree(int m)
@@ -68,10 +68,11 @@ void BTree::insert(int key)
             while (key > current->keys[i] && current->keys[i] != NULL) {
                 i++;
             }
+            k = i;
             prev = current;
             current = current->children[i];
         }
-        if (current->isLeaf == true) {
+//        if (current->isLeaf == true) {
             while (current->keys[i] != NULL && key > current->keys[i]) {
                 i++;
             }
@@ -95,25 +96,25 @@ void BTree::insert(int key)
                     splitChild(prev, current, k);
                 }
             }
-        }
-        else {
-            prev = current;
-            current = current->children[i];
-            k = i;
-        }
+//        }
+//        else {
+//            prev = current;
+//            current = current->children[i];
+//            k = i;
+//        }
     }
     
-    print(this->root, 0);
+    print(this->root);
     cout << endl;
 }
 
 void BTree::splitChild(Node *parent, Node *child, int i)
 {
-    cout << "in splitChild\n";
+//    cout << "in splitChild\n";
     Node* rightChild = new Node(m);
     rightChild->isLeaf = true;
     int mid = child->numKeys/2;
-    cout << "mid: " << mid << endl;
+//    cout << "mid: " << mid << endl;
     
     int origNumKeys = child->numKeys;
     int k = 0;
@@ -218,24 +219,26 @@ int BTree::search(Node* searchMe, int key)
     return -1;
 }
 
-void BTree::print(Node* treeRoot, int j)
+void BTree::print(Node* treeRoot)
 {
 //    cout << "here\n";
     int i = 0;
     while(i < treeRoot->numKeys && treeRoot->keys[i] != NULL) {
         cout << treeRoot->keys[i] << " ";
-        
-        if (treeRoot->children != NULL) {
+
+            if (treeRoot->children != NULL) {
+//            cout << "here\n";
             cout << "[";
-            print(treeRoot->children[i], i);
+            print(treeRoot->children[i]);
             cout << "]";
         }
         i++;
     }
     
     if (treeRoot->children != NULL) {
+//        cout << "here\n";
         cout << "[";
-        print(treeRoot->children[i], i);
+        print(treeRoot->children[i]);
         cout << "]";
     }
     
