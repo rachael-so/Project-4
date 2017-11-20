@@ -28,6 +28,7 @@ public:
     ~Node();
     int size;
     int numKeys;
+    int depth;
     int *keys;
     Node **children;
     bool isLeaf;
@@ -38,6 +39,7 @@ Node::Node(int size)
     this->size = size;
     this->keys = new int[size+1];
     this->numKeys = 0;
+    this->depth = 0;
     this->isLeaf = false;
     this->children = NULL;
 }

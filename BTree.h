@@ -46,7 +46,10 @@ BTree::BTree(int m)
 
 BTree::~BTree()
 {
-    
+    for (int i=0; root->children[i]!=NULL; i++){
+        root->children[i] = NULL;
+        delete [] root->children[i];
+    }
 }
 
 void BTree::insert(int key)
@@ -63,7 +66,7 @@ void BTree::insert(int key)
         int i = 0;
         int k = 0;
         Node* current = root;
-        Node* prev;
+        Node* prev = root;
         while (current->isLeaf == false) {
             while (key > current->keys[k] && current->keys[k] != NULL) {
                 k++;
@@ -89,6 +92,7 @@ void BTree::insert(int key)
                 root = parent;
                 parent->children = new Node*;
                 parent->children[0] = current;
+                parent->children[0]->depth++;
                 splitChild(parent, current, 0);
             }
             else {
@@ -112,6 +116,7 @@ void BTree::splitChild(Node *parent, Node *child, int i)
 //    cout << "in splitChild\n";
     Node* rightChild = new Node(m);
     rightChild->isLeaf = true;
+    rightChild->depth = child->depth;
     int mid = child->numKeys/2;
 //    cout << "mid: " << mid << endl;
     
@@ -132,6 +137,8 @@ void BTree::splitChild(Node *parent, Node *child, int i)
     for (int j = parent->numKeys; j > i; j--) {
         parent->keys[j] = parent->keys[j-1];
     }
+    
+    
     parent->keys[i] = insertMe;
     parent->numKeys++;
     
@@ -156,6 +163,7 @@ int BTree::remove(int key)
     int removeMe = search(current, key);
     
     while (removeMe == -1 && current->children != NULL) {
+        cout << "here\n";
         int i = 0;
         while (key > current->keys[i]) {
             i++;
@@ -164,10 +172,13 @@ int BTree::remove(int key)
         removeMe = search(current, key);
     }
     
-    if (removeMe == key){
+    if (removeMe != -1){
         if (current->isLeaf == true) {
             //delete key
-            current->keys[removeMe] = NULL;
+            for (int i = removeMe; i < current->numKeys; i++) {
+                current->keys[i] = current->keys[i+1];
+            }
+            current->numKeys--;
         }
         else {
             Node* child1 = current->children[removeMe];
@@ -197,9 +208,11 @@ int BTree::remove(int key)
         }
     }
     else {
-        cout << "key not found to remove";
+        cout << "key not found to remove\n";
     }
     
+    print(this->root);
+    cout << endl;
     return key;
 }
 
@@ -225,7 +238,7 @@ void BTree::print(Node* treeRoot)
 {
 //    cout << "here\n";
     int i = 0;
-    while(i < treeRoot->numKeys && treeRoot->keys[i] != NULL) {
+    while(i < treeRoot->numKeys && treeRoot->depth <= height-1) {
         cout << treeRoot->keys[i] << " ";
 
             if (treeRoot->children != NULL) {
