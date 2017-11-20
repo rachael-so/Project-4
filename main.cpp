@@ -22,7 +22,7 @@ int main(int argc, const char * argv[]) {
     tree.insert(1);
     tree.insert(9);
     tree.insert(32);
-//    tree.insert(20);
+    tree.insert(20);
 //    tree.insert(100);
 //    tree.insert(23);
 //    tree.insert(93);

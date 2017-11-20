@@ -68,14 +68,15 @@ void BTree::insert(int key)
         Node* current = root;
         Node* prev = root;
         while (current->isLeaf == false) {
-            while (key > current->keys[k] && current->keys[k] != NULL) {
+            while (key > current->keys[k] && k < current->numKeys) {
                 k++;
             }
             prev = current;
             current = current->children[k];
         }
 //        if (current->isLeaf == true) {
-        while (current->keys[i] != NULL && key > current->keys[i]) {
+        cout << "here: " << current->keys[i] << endl;
+        while (key > current->keys[i] && i < current->numKeys) {
             i++;
         }
         if (i != current->numKeys) {
@@ -92,7 +93,7 @@ void BTree::insert(int key)
                 root = parent;
                 parent->children = new Node*;
                 parent->children[0] = current;
-                parent->children[0]->depth++;
+                current->depth++;
                 splitChild(parent, current, 0);
             }
             else {
@@ -107,7 +108,7 @@ void BTree::insert(int key)
 //        }
     }
     
-    print(this->root);
+    print(root);
     cout << endl;
 }
 
@@ -138,7 +139,6 @@ void BTree::splitChild(Node *parent, Node *child, int i)
         parent->keys[j] = parent->keys[j-1];
     }
     
-    
     parent->keys[i] = insertMe;
     parent->numKeys++;
     
@@ -163,7 +163,6 @@ int BTree::remove(int key)
     int removeMe = search(current, key);
     
     while (removeMe == -1 && current->children != NULL) {
-        cout << "here\n";
         int i = 0;
         while (key > current->keys[i]) {
             i++;
@@ -241,17 +240,22 @@ void BTree::print(Node* treeRoot)
     while(i < treeRoot->numKeys && treeRoot->depth <= height-1) {
         cout << treeRoot->keys[i] << " ";
 
-            if (treeRoot->children != NULL) {
-//            cout << "here\n";
+        if (treeRoot->children != NULL) {
+//           cout << "here\n";
             cout << "[ ";
             print(treeRoot->children[i]);
             cout << "] ";
+//            if (i == treeRoot->numKeys) {
+//            cout << "ugh\n";
+//                cout << "[ ";
+//                print(treeRoot->children[i+1]);
+//                cout << "] ";
+//            }
         }
         i++;
     }
     
-    if (treeRoot->children != NULL) {
-//        cout << "here\n";
+    if (treeRoot->children != NULL && treeRoot->depth <= height-1) {
         cout << "[ ";
         print(treeRoot->children[i]);
         cout << "]";
