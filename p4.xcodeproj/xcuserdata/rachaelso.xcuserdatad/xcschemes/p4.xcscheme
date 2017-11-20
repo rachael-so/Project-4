@@ -61,6 +61,12 @@
             ReferencedContainer = "container:p4.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "/Users/chongs/Desktop/Georgetown1/DataStructures/Project-4/sampleInput.txt"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

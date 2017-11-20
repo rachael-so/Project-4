@@ -46,7 +46,7 @@ BTree::BTree(int m)
 
 BTree::~BTree()
 {
-    for (int i=0; root->children[i]!=NULL; i++){
+    for (int i = 0; root->children[i] != NULL; i++){
         root->children[i] = NULL;
         delete [] root->children[i];
     }
@@ -55,7 +55,7 @@ BTree::~BTree()
 void BTree::insert(int key)
 {
     if (root == NULL) {
-        Node* first = new Node(m);
+        Node* first = new Node(m, 0);
         root = first;
         first->isLeaf = true;
         first->keys[0] = key;
@@ -75,7 +75,6 @@ void BTree::insert(int key)
             current = current->children[k];
         }
 //        if (current->isLeaf == true) {
-        cout << "here: " << current->keys[i] << endl;
         while (key > current->keys[i] && i < current->numKeys) {
             i++;
         }
@@ -88,7 +87,7 @@ void BTree::insert(int key)
         
         if (current->numKeys == current->size) {
             if (current == root) {
-                Node* parent = new Node(m);
+                Node* parent = new Node(m, 0);
                 height++;
                 root = parent;
                 parent->children = new Node*;
@@ -115,9 +114,8 @@ void BTree::insert(int key)
 void BTree::splitChild(Node *parent, Node *child, int i)
 {
 //    cout << "in splitChild\n";
-    Node* rightChild = new Node(m);
+    Node* rightChild = new Node(m, child->depth);
     rightChild->isLeaf = true;
-    rightChild->depth = child->depth;
     int mid = child->numKeys/2;
 //    cout << "mid: " << mid << endl;
     
@@ -143,16 +141,18 @@ void BTree::splitChild(Node *parent, Node *child, int i)
     parent->numKeys++;
     
     //add right child
-//    parent->children[i]->numKeys++;
-//    cout << "here: " << i << endl;
-    for (int j = m; j > i+1; j--) {
+    for (int j = parent->numKeys; j > i+1; j--) {
         parent->children[j] = parent->children[j-1];
     }
+    
+    cout << "ugh: " << child->numKeys << endl;
     parent->children[i+1] = rightChild;
+    cout << "ughh: " << child->numKeys << endl;
     
     //check if parent is over and if so then call function
     if (parent->numKeys == parent->size) {
         //recursive call????
+        cout << "help me...\n";
     }
 }
 
@@ -246,7 +246,6 @@ void BTree::print(Node* treeRoot)
             print(treeRoot->children[i]);
             cout << "] ";
 //            if (i == treeRoot->numKeys) {
-//            cout << "ugh\n";
 //                cout << "[ ";
 //                print(treeRoot->children[i+1]);
 //                cout << "] ";

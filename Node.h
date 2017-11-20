@@ -24,7 +24,7 @@ using namespace std;
 class Node
 {
 public:
-    Node(int);
+    Node(int, int);
     ~Node();
     int size;
     int numKeys;
@@ -34,12 +34,12 @@ public:
     bool isLeaf;
 };
 
-Node::Node(int size)
+Node::Node(int size, int depth)
 {
     this->size = size;
     this->keys = new int[size+1];
     this->numKeys = 0;
-    this->depth = 0;
+    this->depth = depth;
     this->isLeaf = false;
     this->children = NULL;
 }
