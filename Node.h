@@ -35,10 +35,10 @@ private:
     int size;
 };
 
-Node::Node(int size, int depth)
+Node::Node(int m, int depth)
 {
-    this->size = size;
-    this->keys = new int[size+1];
+    this->size = m-1;
+    this->keys = new int[size];
     this->numKeys = 0;
     this->depth = depth;
     this->isLeaf = false;
@@ -49,5 +49,6 @@ Node::~Node()
 {
     delete [] keys;
 }
+
 
 #endif /* Node_h */
