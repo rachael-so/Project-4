@@ -26,12 +26,13 @@ class Node
 public:
     Node(int, int);
     ~Node();
-    int size;
     int numKeys;
     int depth;
     int *keys;
     Node **children;
     bool isLeaf;
+private:
+    int size;
 };
 
 Node::Node(int size, int depth)
