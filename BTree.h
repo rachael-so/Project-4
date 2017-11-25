@@ -280,37 +280,44 @@ void BTree::remove(int key)
     int idx = search(current, key);
     
     while (current->keys[idx] != key && current->isLeaf == false) {
-        //find which child to move into
-        Node* child;
-        if (key < current->keys[idx]) {
-            child = current->children[idx];
-        }
-        else {
-            child = current->children[idx+1];
-        }
+        //initialize child to move into
+        Node* child = current->children[idx];
         
         //check if child is at minimum value (m/2-1)
         if (child->numKeys == ceil(m/2)-1) {
             //check if siblings are at minimum
             if ((idx == 0 && current->children[idx+1]->numKeys == ceil(m/2)-1)
-                || (idx == m && current->children[idx-1]->numKeys == ceil(m/2)-1)
-                || (idx > 0 && idx < m && current->children[idx+1]->numKeys == ceil(m/2)-1
+                || (idx == current->numKeys-1 && current->children[idx-1]->numKeys == ceil(m/2)-1)
+                || (idx > 0 && idx < current->numKeys-1
+                    && current->children[idx+1]->numKeys == ceil(m/2)-1
                     && current->children[idx-1]->numKeys == ceil(m/2)-1)) {
-                    //determine which sibling to merge with
+                    //udjust child and siblingChild
                     Node* siblingChild;
-                    if (idx == m) {
-                        siblingChild = current->children[idx-1];
+                    if (idx == current->numKeys-1) {
+                        siblingChild = child;
+                        child = current->children[idx-1];
                     }
                     else {
                         siblingChild = current->children[idx+1];
                     }
                     
-                    //merge children leaving room for median
+                    //merge child and sibling leaving room for median
                     int origNumKeys = child->numKeys;
-                    for (int i = 0, j = origNumKeys+1; i < siblingChild->numKeys; i++, j++) {
+                    int i = 0, j = origNumKeys+1;
+                    while (i < siblingChild->numKeys) {
                         child->keys[j] = siblingChild->keys[i];
                         child->numKeys++;
+                        //if not leaf nodes udjust the children
+                        if (child->isLeaf == false) {
+                            child->children[j+1] = siblingChild->children[i];
+                        }
+                        i++;
+                        j++;
                     }
+                    if (child->isLeaf == false) {
+                        child->children[j+1] = siblingChild->children[i];
+                    }
+                    
                     delete [] siblingChild;
                     siblingChild = NULL;
                     
@@ -320,7 +327,14 @@ void BTree::remove(int key)
                     //udjust keys and pointers in current
                     for (int i = idx; i < current->numKeys; i++) {
                         current->keys[i] = current->keys[i+1];
-                        current->children[i+1] = current->children[i+2];
+                        if (idx != current->numKeys-1)
+                            current->children[i+1] = current->children[i+2];
+                    }
+                    
+                    if (root->numKeys == 0) {
+                        delete [] root;
+                        root = child;
+                        height--;
                     }
                 }
             else {
@@ -329,27 +343,111 @@ void BTree::remove(int key)
                 if (current->children[idx-1] == NULL
                     || current->children[idx+1]->numKeys > current->children[idx-1]->numKeys) {
                     siblingChild = current->children[idx+1];
+                    
                     //demote a key from current
                     child->keys[child->numKeys] = current->keys[idx];
+                    child->numKeys++;
                     
                     //edit sibling’s child pointers and attach one to the new key in child
+                    child->children[child->numKeys] = siblingChild->children[0];
+                    
                     //promote key from sibling to current
+                    current->keys[idx] = siblingChild->keys[0];
+                    
+                    //delete promoted key from sibling
+                    int i = 0;
+                    while (i < siblingChild->numKeys) {
+                        siblingChild->keys[i] = siblingChild->keys[i+1];
+                        if (child->isLeaf == false) {
+                            child->children[i] = siblingChild->children[i+1];
+                        }
+                        i++;
+                    }
+                    if (child->isLeaf == false) {
+                        child->children[i] = siblingChild->children[i+1];
+                    }
+                    siblingChild->numKeys--;
                 }
                 else {
                     siblingChild = current->children[idx-1];
+                    
+                    //make room in child
+                    int i = child->numKeys;
+                    while (i > 0) {
+                        child->keys[i] = child->keys[i-1];
+                        if (child->isLeaf == false) {
+                            child->children[i+1] = child->children[i];
+                        }
+                        i--;
+                    }
+                    
                     //demote a key from current
+                    child->keys[0] = current->keys[idx];
+                    
                     //edit sibling’s child pointers and attach one to the new key in child
+                    child->children[0] = siblingChild->children[siblingChild->numKeys];
+                    
                     //promote key from sibling to current
+                    current->keys[idx] = siblingChild->keys[siblingChild->numKeys-1];
+                    siblingChild->keys[siblingChild->numKeys-1] = NULL;
+                    siblingChild->numKeys--;
                 }
             }
             //move into child
-            //idx = search(current, key);
+            current = child;
+            idx = search(current, key);
         }
         else {
             //move into child
-            //idx = search(current, key);
+            current = child;
+            idx = search(current, key);
         }
         
+    }
+    
+    if (current->isLeaf) {
+        if (current->keys[idx] != key) {
+            cout << "key is not found in tree\n";
+            return;
+        }
+        else {
+            //remove key
+            for (int i = idx; i < current->numKeys; i++) {
+                current->keys[i] = current->keys[i+1];
+            }
+            current->numKeys--;
+        }
+    }
+    else  {
+        Node* leftChild = current->children[idx];
+        Node* rightChild = current->children[idx+1];
+        if (leftChild->numKeys == ceil(m/2)-1 && rightChild->numKeys == ceil(m/2)-1) {
+            //merge children
+            for (int i = 0, j = leftChild->numKeys; i < rightChild->numKeys; i++, j++) {
+                leftChild[j] = rightChild[i];
+            }
+            delete [] rightChild;
+            rightChild = NULL;
+            
+            //remove key
+            int i = 0;
+            while (i < current->numKeys) {
+                current->keys[i] = current->keys[i+1];
+                current->children[i+1] = current->children[i+2];
+                i++;
+            }
+            current->children[i+1] = current->children[i+2];
+            current->numKeys--;
+        }
+        else {
+            while (current->isLeaf == false) {
+                //find which child is larger and promote a key
+                //demote the key to remove into child
+//                current = current->child;
+            }
+            
+            //remove key
+        }
     }
     
 }
