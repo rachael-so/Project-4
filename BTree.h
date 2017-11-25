@@ -25,7 +25,7 @@ using namespace std;
 class BTree
 {
 private:
-    int m;
+    float m;
     int height;
 public:
     BTree(int);
@@ -60,7 +60,7 @@ void BTree::insert(int key)
     //check if tree is empty
     if (root == NULL) {
         //create new node
-        Node* first = new Node(m, 0);
+        Node* first = new Node(m);
         root = first;
         first->isLeaf = true;
         
@@ -73,15 +73,16 @@ void BTree::insert(int key)
         //check if root is full
         if (root->numKeys == m-1) {
             //create new root
-            Node* parent = new Node(m, 0);
+            Node* parent = new Node(m);
             height++;
             Node* child = root;
             root = parent;
             
             //make old root child of new root
-            parent->children = new Node*[m];
+            int size = m;
+            parent->children = new Node*[size];
             parent->children[0] = child;
-            child->depth++;
+            
             
             //split child, which updates new root with median
             splitChild(parent, child, 0);
@@ -98,8 +99,8 @@ void BTree::insert(int key)
             insertToNonFull(key, root);
         }
     }
-    print(root);
-    cout << endl;
+//    print(root);
+//    cout << endl;
 }
 
 void BTree::insertToNonFull(int key, Node* current)
@@ -151,10 +152,11 @@ void BTree::insertToNonFull(int key, Node* current)
 void BTree::splitChild(Node *parent, Node *child, int i)
 {
     //create new right child
-    Node* rightChild = new Node(m, child->depth);
+    Node* rightChild = new Node(m);
     rightChild->isLeaf = child->isLeaf;
     if (child->children != NULL) {
-        rightChild->children = new Node*[m];
+        int size = m;
+        rightChild->children = new Node*[size];
     }
     
     //find median index of child
@@ -282,6 +284,7 @@ void BTree::remove(int key)
     int idx = search(current, key);
     
     while (current->keys[idx] != key && current->isLeaf == false) {
+        
         //initialize child to move into
         Node* child = current->children[idx];
         
@@ -289,13 +292,13 @@ void BTree::remove(int key)
         if (child->numKeys == ceil(m/2)-1) {
             //check if siblings are at minimum
             if ((idx == 0 && current->children[idx+1]->numKeys == ceil(m/2)-1)
-                || (idx == current->numKeys-1 && current->children[idx-1]->numKeys == ceil(m/2)-1)
+                || (idx == current->numKeys && current->children[idx-1]->numKeys == ceil(m/2)-1)
                 || (idx > 0 && idx < current->numKeys-1
                     && current->children[idx+1]->numKeys == ceil(m/2)-1
                     && current->children[idx-1]->numKeys == ceil(m/2)-1)) {
                     //udjust child and siblingChild
                     Node* siblingChild;
-                    if (idx == current->numKeys-1) {
+                    if (idx == current->numKeys) {
                         siblingChild = child;
                         child = current->children[idx-1];
                     }
@@ -311,33 +314,34 @@ void BTree::remove(int key)
                         child->numKeys++;
                         //if not leaf nodes udjust the children
                         if (child->isLeaf == false) {
-                            child->children[j+1] = siblingChild->children[i];
+                            child->children[j] = siblingChild->children[i];
                         }
                         i++;
                         j++;
                     }
                     if (child->isLeaf == false) {
-                        child->children[j+1] = siblingChild->children[i];
+                        child->children[j] = siblingChild->children[i];
                     }
-                    
-                    delete [] siblingChild;
+                    delete [] siblingChild->keys;
                     siblingChild = NULL;
                     
                     //insert median
                     child->keys[origNumKeys] = current->keys[idx];
+                    child->numKeys++;
                     
                     //udjust keys and pointers in current
                     for (int i = idx; i < current->numKeys; i++) {
                         current->keys[i] = current->keys[i+1];
-                        if (idx != current->numKeys-1)
-                            current->children[i+1] = current->children[i+2];
+                        current->children[i+1] = current->children[i+2];
                     }
+                    current->numKeys--;
                     
                     if (root->numKeys == 0) {
-                        delete [] root;
+                        delete [] root->keys;
                         root = child;
                         height--;
                     }
+
                 }
             else {
                 //find which sibling child has more keys
@@ -472,6 +476,9 @@ void BTree::remove(int key)
         }
     }
     
+    print(root);
+    cout << endl;
+    
 }
 
 //remove(key)
@@ -526,7 +533,7 @@ void BTree::remove(int key)
 int BTree::search(Node* searchMe, int key)
 {
     int i = 0;
-    while (key < searchMe->keys[i]) {
+    while (key > searchMe->keys[i]) {
         i++;
     }
     
@@ -535,7 +542,6 @@ int BTree::search(Node* searchMe, int key)
 
 void BTree::print(Node* treeRoot)
 {
-//    cout << "here\n";
     for (int i = 0; i < treeRoot->numKeys; i++) {
         cout << treeRoot->keys[i];
         if (i < treeRoot->numKeys-1) {
@@ -544,7 +550,7 @@ void BTree::print(Node* treeRoot)
     }
     
     int i = 0;
-    while (i < treeRoot->numKeys && treeRoot->depth < height) {
+    while (i < treeRoot->numKeys && treeRoot->isLeaf == false) {
         if (treeRoot->children != NULL) {
             cout << "[";
             print(treeRoot->children[i]);
@@ -554,9 +560,20 @@ void BTree::print(Node* treeRoot)
     }
 
     if (treeRoot->isLeaf == false) {
+        cout << "here\n";
         cout << "[";
         print(treeRoot->children[i]);
         cout << "]";
+    }
+    else {
+        while (i < treeRoot->numKeys) {
+            if (treeRoot->children != NULL) {
+                cout << "[";
+                print(treeRoot->children[i]);
+                cout << "]";
+            }
+            i++;
+        }
     }
     
 }

@@ -69,6 +69,11 @@ int main(int argc, const char * argv[]) {
             tree.insert(5);
             tree.insert(40);
             tree.insert(50);
+            
+            tree.print(tree.root);
+            cout << endl;
+            
+            tree.remove(6);
         }
     }
     

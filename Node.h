@@ -24,10 +24,9 @@ using namespace std;
 class Node
 {
 public:
-    Node(int, int);
+    Node(float);
     ~Node();
     int numKeys;
-    int depth;
     int *keys;
     Node **children;
     bool isLeaf;
@@ -35,12 +34,11 @@ private:
     int size;
 };
 
-Node::Node(int m, int depth)
+Node::Node(float m)
 {
     this->size = m-1;
     this->keys = new int[size];
     this->numKeys = 0;
-    this->depth = depth;
     this->isLeaf = false;
     this->children = NULL;
 }
@@ -48,6 +46,9 @@ Node::Node(int m, int depth)
 Node::~Node()
 {
     delete [] keys;
+    size = 0;
+    numKeys = 0;
+    children = NULL;
 }
 
 
