@@ -45,30 +45,30 @@ int main(int argc, const char * argv[]) {
             
     BTree tree(m);
             
-            while (inputFile >> key) {
-                tree.insert(key);
-            }
-            tree.print(tree.root);
-            cout << endl;
+//            while (inputFile >> key) {
+//                tree.insert(key);
+//            }
+//            tree.print(tree.root);
+//            cout << endl;
     
-//            tree.insert(2);
-//            tree.insert(3);
-//            tree.insert(11);
-//            tree.insert(7);
-//            tree.insert(1);
-//            tree.insert(9);
-//            tree.insert(32);
-//            tree.insert(20);
-//            tree.insert(100);
-//            tree.insert(23);
-//            tree.insert(93);
-//            tree.insert(27);
-//            tree.insert(99);
-//            tree.insert(6);
-//            tree.insert(4);
-//            tree.insert(5);
-//            tree.insert(40);
-//            tree.insert(50);
+            tree.insert(2);
+            tree.insert(3);
+            tree.insert(11);
+            tree.insert(7);
+            tree.insert(1);
+            tree.insert(9);
+            tree.insert(32);
+            tree.insert(20);
+            tree.insert(100);
+            tree.insert(23);
+            tree.insert(93);
+            tree.insert(27);
+            tree.insert(99);
+            tree.insert(6);
+            tree.insert(4);
+            tree.insert(5);
+            tree.insert(40);
+            tree.insert(50);
         }
     }
     
