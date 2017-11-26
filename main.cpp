@@ -45,29 +45,26 @@ int main(int argc, const char * argv[]) {
             
             BTree tree(m);
             
-            while (inputFile >> key) {
-                tree.insert(key);
-            }
+//            while (inputFile >> key) {
+//                tree.insert(key);
+//            }
             
-//            tree.insert(2);
-//            tree.insert(3);
-//            tree.insert(11);
-//            tree.insert(7);
-//            tree.insert(1);
-//            tree.insert(9);
-//            tree.insert(32);
-//            tree.insert(20);
-//            tree.insert(100);
-//            tree.insert(23);
-//            tree.insert(93);
-//            tree.insert(27);
-//            tree.insert(99);
-//            tree.insert(6);
-//            tree.insert(4);
-//            tree.insert(5);
-//            tree.insert(40);
-//            tree.insert(50);
-            
+            tree.insert(1);
+            tree.insert(2);
+            tree.insert(3);
+            tree.insert(4);
+            tree.insert(5);
+            tree.insert(6);
+            tree.insert(7);
+            tree.insert(8);
+            tree.insert(9);
+            tree.insert(10);
+            tree.insert(11);
+            tree.insert(12);
+            tree.insert(13);
+            tree.insert(14);
+            tree.insert(15);
+
             tree.print(tree.root);
             cout << endl;
             
@@ -75,7 +72,7 @@ int main(int argc, const char * argv[]) {
             
             while (quit == false) {
                 string ans;
-                cout << "add to heap (a key), remove from heap (r), quit (q): ";
+                cout << "add to heap (a key), remove from heap (r key), quit (q): ";
                 getline(cin, ans);
                 if (ans == "q")
                     quit = true;
@@ -83,20 +80,24 @@ int main(int argc, const char * argv[]) {
                     istringstream info(ans);
                     char letter;
                     int key;
-                    info >> letter >> key;
-                    
-                    if (letter == 'r') {
-                        tree.remove(key);
-                    }
-                    else if (letter == 'a') {
-                        tree.insert(key);
+                    if (info >> letter >> key) {
+                        if (letter == 'r') {
+                            tree.remove(key);
+                            tree.print(tree.root);
+                            cout << endl;
+                        }
+                        else if (letter == 'a') {
+                            tree.insert(key);
+                            tree.print(tree.root);
+                            cout << endl;
+                        }
+                        else {
+                            cout << "please enter valid command\n";
+                        }
                     }
                     else {
                         cout << "please enter valid command\n";
                     }
-                    
-                    tree.print(tree.root);
-                    cout << endl;
                 }
             }
         }
