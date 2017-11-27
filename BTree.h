@@ -221,7 +221,7 @@ void BTree::splitChild(Node *parent, Node *child, int i)
     parent->children[i+1] = rightChild;
 }
 
-void BTree::remove(int k)
+void BTree::remove(int key)
 {
     if (root == NULL)
     {
@@ -229,7 +229,7 @@ void BTree::remove(int k)
     }
     
     // Call the remove function starting at root
-    root->remove(k);
+    root->remove(key);
     
     //check root and adjust
     if (root->numKeys == 0)

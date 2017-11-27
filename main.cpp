@@ -45,42 +45,42 @@ int main(int argc, const char * argv[]) {
             
             BTree tree(m);
             
-//            while (inputFile >> key) {
-//                tree.insert(key);
-//            }
+            while (inputFile >> key) {
+                tree.insert(key);
+                iss.clear();
+            }
             
-            tree.insert(1);
-            tree.insert(2);
-            tree.insert(3);
-            tree.insert(4);
-            tree.insert(5);
-            tree.insert(6);
-            tree.insert(7);
-            tree.insert(8);
-            tree.insert(9);
-            tree.insert(10);
-            tree.insert(11);
-            tree.insert(12);
-            tree.insert(13);
-            tree.insert(14);
-            tree.insert(15);
+//            tree.insert(1);
+//            tree.insert(2);
+//            tree.insert(3);
+//            tree.insert(4);
+//            tree.insert(5);
+//            tree.insert(6);
+//            tree.insert(7);
+//            tree.insert(8);
+//            tree.insert(9);
+//            tree.insert(10);
+//            tree.insert(11);
+//            tree.insert(12);
+//            tree.insert(13);
+//            tree.insert(14);
+//            tree.insert(15);
 
             tree.print(tree.root);
             cout << endl;
             
             bool quit = false;
+            char letter;
             
             while (quit == false) {
                 string ans;
-                cout << "add to heap (a key), remove from heap (r key), quit (q): ";
+                cout << "add to tree (a key), remove from tree (r key), quit (q): ";
                 getline(cin, ans);
                 if (ans == "q")
                     quit = true;
                 else {
-                    istringstream info(ans);
-                    char letter;
-                    int key;
-                    if (info >> letter >> key) {
+                    istringstream ss(ans);
+                    if (ss >> letter >> key) {
                         if (letter == 'r') {
                             tree.remove(key);
                             tree.print(tree.root);
@@ -98,6 +98,7 @@ int main(int argc, const char * argv[]) {
                     else {
                         cout << "please enter valid command\n";
                     }
+                    ss.clear();
                 }
             }
         }

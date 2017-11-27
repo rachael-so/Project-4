@@ -93,17 +93,14 @@ void Node::remove(int key)
         }
         else {
             //check if child has too little keys to traverse into
-            if ((children[idx]->isLeaf && children[idx]->numKeys < minKeys) ||
-                (!children[idx]->isLeaf && children[idx]->numKeys <= minKeys))
+            if (children[idx]->numKeys < minKeys)
             {
                 //borrow from previous sibling if possible
-                if (idx != 0 && ((children[idx-1]->numKeys > minKeys)
-                    || (!children[idx-1]->isLeaf && children[idx-1]->numKeys >= minKeys))) {
+                if (idx != 0 && children[idx-1]->numKeys > minKeys) {
                     borrowFromPrev(idx);
                 }
                 //can't borrow from previous sibling then borrow from next sibling
-                else if (idx != numKeys && ((children[idx+1]->numKeys > minKeys) ||
-                        (!children[idx+1]->isLeaf && children[idx+1]->numKeys >= minKeys))) {
+                else if (idx != numKeys && children[idx+1]->numKeys > minKeys) {
                     borrowFromNext(idx);
                 }
                 //if both siblings are at minimum keys then merge
@@ -230,19 +227,20 @@ void Node::merge(int idx)
     Node *sibling = children[idx+1];
     
     //demote
-    child->keys[minKeys-1] = keys[idx];
+    child->keys[child->numKeys] = keys[idx];
     child->numKeys++;
     
+    int n = child->numKeys;
     //copy keys and child pointers
     for (int i = 0; i < sibling->numKeys; i++) {
-        child->keys[i+minKeys] = sibling->keys[i];
+        child->keys[i+n] = sibling->keys[i];
         child->numKeys++;
     }
     
     if (!child->isLeaf)
     {
         for(int i = 0; i <= sibling->numKeys; i++)
-            child->children[i+minKeys] = sibling->children[i];
+            child->children[i+child->numKeys-1] = sibling->children[i];
     }
     
     //close up keys
