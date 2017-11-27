@@ -8,8 +8,6 @@
 //
 
 #include <iostream>
-#include <string>
-#include <sstream>
 #include <fstream>
 #include "BTree.h"
 
@@ -34,20 +32,15 @@ int main(int argc, const char * argv[]) {
         }
         else if (inputFile) {
 //            cout << "opened file!" << endl;
-            
             string num;
             int m;
             int key;
             
-            getline(inputFile, num);
-            istringstream iss(num);
-            iss >> m;
-            
+            inputFile >> m;
             BTree tree(m);
             
             while (inputFile >> key) {
                 tree.insert(key);
-                iss.clear();
             }
             
 //            tree.insert(1);
@@ -70,35 +63,30 @@ int main(int argc, const char * argv[]) {
             cout << endl;
             
             bool quit = false;
-            char letter;
+            string letter = "";
             
             while (quit == false) {
-                string ans;
                 cout << "add to tree (a key), remove from tree (r key), quit (q): ";
-                getline(cin, ans);
-                if (ans == "q")
+                cin >> letter;
+                if (letter == "q") {
                     quit = true;
+                }
                 else {
-                    istringstream ss(ans);
-                    if (ss >> letter >> key) {
-                        if (letter == 'r') {
-                            tree.remove(key);
-                            tree.print(tree.root);
-                            cout << endl;
-                        }
-                        else if (letter == 'a') {
-                            tree.insert(key);
-                            tree.print(tree.root);
-                            cout << endl;
-                        }
-                        else {
-                            cout << "please enter valid command\n";
-                        }
+                    if (letter == "a") {
+                        cin >> key;
+                        tree.insert(key);
+                        tree.print(tree.root);
+                        cout << endl;
+                    }
+                    else if (letter == "r") {
+                        cin >> key;
+                        tree.remove(key);
+                        tree.print(tree.root);
+                        cout << endl;
                     }
                     else {
-                        cout << "please enter valid command\n";
+                        cout << "please enter a valid command\n";
                     }
-                    ss.clear();
                 }
             }
         }

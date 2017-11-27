@@ -50,7 +50,7 @@ BTree::BTree(int m)
 
 BTree::~BTree()
 {
-    clear(root);
+//    clear(root);
 }
 
 void BTree::clear(Node *current)
@@ -60,15 +60,13 @@ void BTree::clear(Node *current)
         clear(current->children[i]);
     }
     
-    for (int i = 0; i <= current->numKeys; i++) {
-        delete current;
-    }
-    
     if (!current->isLeaf) {
         //delete children array
         delete [] current->children;
         current->children = NULL;
     }
+    
+    delete current;
 }
 
 void BTree::insert(int key)

@@ -89,7 +89,7 @@ void Node::remove(int key)
     }
     else {
         if (isLeaf) {
-            cout << "child not found in tree\n";
+            cout << "key not found in tree\n";
         }
         else {
             //check if child has too little keys to traverse into
